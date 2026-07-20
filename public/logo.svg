@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="320" height="320">
+  <rect width="320" height="320" fill="#BC4A2D"/>
+  <g fill="none" stroke="#322B27" stroke-width="30" stroke-linecap="round" stroke-linejoin="round">
+    <!-- C (back) -->
+    <path d="M 240 96 A 84 84 0 1 0 240 244"/>
+    <!-- B bowls -->
+    <path d="M 128 70 C 196 70, 214 108, 214 116 C 214 148, 182 160, 128 160"/>
+    <path d="M 128 160 C 190 160, 220 176, 220 202 C 220 236, 182 250, 128 250"/>
+    <!-- shared stem -->
+    <path d="M 128 70 L 128 250"/>
+    <!-- E arms -->
+    <path d="M 128 70 L 206 70"/>
+    <path d="M 128 160 L 190 160"/>
+    <path d="M 128 250 L 214 250"/>
+  </g>
+  <g fill="none" stroke="#F2E8D5" stroke-width="20" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 240 96 A 84 84 0 1 0 240 244"/>
+    <path d="M 128 70 C 196 70, 214 108, 214 116 C 214 148, 182 160, 128 160"/>
+    <path d="M 128 160 C 190 160, 220 176, 220 202 C 220 236, 182 250, 128 250"/>
+    <path d="M 128 70 L 128 250"/>
+    <path d="M 128 70 L 206 70"/>
+    <path d="M 128 160 L 190 160"/>
+    <path d="M 128 250 L 214 250"/>
+  </g>
+</svg>
