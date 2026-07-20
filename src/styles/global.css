@@ -1,0 +1,165 @@
+/* ============================================================
+   Eclectic Boards & Cards — "Print Shop" design system
+   Palette sampled from the Enterprise Brewing stopper badge.
+   Dark mode is the default; [data-theme="light"] overrides.
+   ============================================================ */
+
+:root {
+  --bg: #121010;
+  --bg2: #1c1817;
+  --ink: #f9f4e2;
+  --muted: #aaa295;
+  --red: #a02416;
+  --red-bright: #c7331f;
+  --line: #f9f4e2;
+  --cream: #f9f4e2;
+  --card-shadow: #9a9384;
+}
+
+[data-theme="light"] {
+  --bg: #f9f4e2;
+  --bg2: #fffcf2;
+  --ink: #0c0b0a;
+  --muted: #6b645a;
+  --red: #a02416;
+  --red-bright: #7e1c10;
+  --line: #0c0b0a;
+  --card-shadow: var(--red);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Source Serif 4', Georgia, serif;
+  transition: background .3s, color .3s;
+  line-height: 1.65;
+}
+
+img { max-width: 100%; }
+
+.wrap { max-width: 1020px; margin: 0 auto; padding: 0 24px; }
+.slab { font-family: 'Alfa Slab One', serif; font-weight: 400; }
+.caps { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .16em; }
+
+/* ---- top bar ---- */
+.topbar { border-bottom: 3px solid var(--line); }
+.topbar .wrap {
+  display: flex; justify-content: space-between; align-items: center;
+  padding-top: 10px; padding-bottom: 10px; font-size: .72rem; color: var(--muted);
+}
+.theme-toggle {
+  background: none; border: 2px solid var(--line); color: var(--ink);
+  font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .12em;
+  font-size: .65rem; padding: 4px 10px; cursor: pointer;
+}
+.theme-toggle:hover { background: var(--red); color: var(--cream); border-color: var(--red); }
+
+/* ---- masthead ---- */
+.masthead { border-bottom: 8px double var(--line); }
+.masthead .wrap { display: flex; align-items: center; gap: 28px; padding-top: 30px; padding-bottom: 30px; }
+.masthead img { width: 120px; height: 120px; border-radius: 50%; }
+.masthead h1 { font-size: clamp(1.8rem, 5vw, 3.2rem); line-height: 1.05; text-transform: uppercase; }
+.masthead h1 a { color: inherit; text-decoration: none; }
+.masthead h1 .amp { color: var(--red-bright); }
+.masthead .sub { color: var(--muted); font-style: italic; margin-top: 8px; }
+
+/* ---- nav ---- */
+nav.mainnav { border-bottom: 3px solid var(--line); }
+nav.mainnav .wrap { display: flex; }
+nav.mainnav a {
+  color: var(--ink); text-decoration: none; padding: 12px 26px; font-size: .85rem;
+  border-right: 3px solid var(--line);
+}
+nav.mainnav a:first-child { border-left: 3px solid var(--line); }
+nav.mainnav a:hover, nav.mainnav a[aria-current="page"] { background: var(--red); color: var(--cream); }
+
+/* ---- hero ---- */
+.hero { text-align: center; padding: 70px 24px 60px; }
+.hero .over { color: var(--red-bright); font-size: .8rem; margin-bottom: 18px; }
+.hero h2 { font-size: clamp(2.2rem, 6vw, 4.2rem); text-transform: uppercase; line-height: 1.1; max-width: 800px; margin: 0 auto; }
+.hero h2 .out { color: transparent; -webkit-text-stroke: 2px var(--ink); }
+.hero p { font-style: italic; color: var(--muted); margin-top: 20px; font-size: 1.1rem; }
+.orn { color: var(--red-bright); font-size: 1.4rem; margin-top: 26px; }
+
+/* ---- section titles ---- */
+.sec-title { display: flex; align-items: center; gap: 16px; margin-bottom: 30px; }
+.sec-title h3 { font-size: 1.5rem; text-transform: uppercase; white-space: nowrap; }
+.sec-title .fill { flex: 1; height: 12px; background: repeating-linear-gradient(90deg, var(--line) 0 2px, transparent 2px 8px); }
+
+/* ---- post cards ---- */
+.posts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; padding-bottom: 70px; }
+.card {
+  background: var(--bg2); border: 3px solid var(--line);
+  box-shadow: 8px 8px 0 var(--card-shadow);
+  padding: 26px 22px; display: flex; flex-direction: column; gap: 12px;
+}
+.card .kick { color: var(--red-bright); font-size: .68rem; }
+.card h4 { font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 1.05rem; line-height: 1.4; }
+.card h4 a { color: inherit; text-decoration: none; }
+.card h4 a:hover { color: var(--red-bright); }
+.card p { color: var(--muted); font-size: .92rem; line-height: 1.6; flex: 1; }
+.card .date { font-size: .75rem; color: var(--muted); }
+
+/* ---- article/prose pages ---- */
+.article-head { text-align: center; padding: 60px 24px 40px; border-bottom: 3px solid var(--line); }
+.article-head .kick { color: var(--red-bright); font-size: .75rem; }
+.article-head h1 { font-size: clamp(1.8rem, 5vw, 3rem); text-transform: uppercase; line-height: 1.15; max-width: 820px; margin: 14px auto 0; }
+.article-head .date { color: var(--muted); font-style: italic; margin-top: 16px; }
+.prose { max-width: 720px; margin: 0 auto; padding: 50px 24px 80px; font-size: 1.05rem; }
+.prose h2, .prose h3 { font-family: 'Alfa Slab One', serif; font-weight: 400; text-transform: uppercase; line-height: 1.3; margin: 2em 0 .6em; }
+.prose h2 { font-size: 1.4rem; }
+.prose h3 { font-size: 1.1rem; }
+.prose p { margin-bottom: 1.2em; }
+.prose a { color: var(--red-bright); }
+.prose ul, .prose ol { margin: 0 0 1.2em 1.4em; }
+.prose li { margin-bottom: .4em; }
+.prose blockquote {
+  border-left: 6px solid var(--red); padding: .4em 0 .4em 1.2em;
+  font-style: italic; color: var(--muted); margin-bottom: 1.2em;
+}
+.prose img { border: 3px solid var(--line); box-shadow: 8px 8px 0 var(--red); margin: 1em 0; }
+.prose hr { border: none; border-top: 3px double var(--line); margin: 2em 0; }
+.prose code { background: var(--bg2); padding: .15em .4em; border: 1px solid var(--muted); font-size: .9em; }
+.prose pre { background: var(--bg2); border: 3px solid var(--line); padding: 1em; overflow-x: auto; margin-bottom: 1.2em; }
+.prose pre code { border: none; background: none; }
+
+/* ---- newsletter ---- */
+.news { border-top: 8px double var(--line); border-bottom: 8px double var(--line); text-align: center; padding: 50px 24px; }
+.news h3 { font-size: 1.8rem; text-transform: uppercase; }
+.news h3 span { color: var(--red-bright); }
+.news p { color: var(--muted); font-style: italic; margin: 10px 0 24px; }
+.news form { display: flex; justify-content: center; flex-wrap: wrap; }
+.news input[type="email"] {
+  background: var(--bg2); border: 3px solid var(--line); border-right: none; color: var(--ink);
+  padding: 13px 16px; width: 300px; font-family: inherit; font-size: .95rem;
+}
+.news input[type="email"]:focus { outline: none; }
+.news button {
+  background: var(--red); color: var(--cream); border: 3px solid var(--line);
+  padding: 13px 26px; font-family: 'Oswald', sans-serif; text-transform: uppercase;
+  letter-spacing: .14em; font-size: .8rem; cursor: pointer;
+}
+.news button:hover { background: var(--red-bright); }
+.news .msg { margin-top: 14px; font-style: italic; font-size: .9rem; min-height: 1.4em; }
+.news .msg.ok { color: var(--red-bright); }
+.hp { position: absolute; left: -9999px; opacity: 0; }
+
+/* ---- pagination / misc ---- */
+.pagenav { display: flex; justify-content: space-between; padding: 0 0 70px; }
+.pagenav a { color: var(--red-bright); text-decoration: none; font-size: .8rem; }
+.pagenav a:hover { text-decoration: underline; }
+
+footer.site { text-align: center; padding: 34px; color: var(--muted); font-size: .78rem; }
+footer.site a { color: var(--muted); }
+footer.site a:hover { color: var(--red-bright); }
+
+@media (max-width: 800px) {
+  .posts { grid-template-columns: 1fr; }
+  .masthead .wrap { flex-direction: column; text-align: center; }
+  nav.mainnav .wrap { justify-content: center; }
+  nav.mainnav a { padding: 12px 18px; }
+}

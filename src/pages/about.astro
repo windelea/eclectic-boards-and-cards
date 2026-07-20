@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import Newsletter from '../components/Newsletter.astro';
+---
+<Base title="About" description="Who runs Eclectic Boards & Cards, and why." activeNav="about">
+  <header class="article-head">
+    <span class="kick caps">✦ The proprietor ✦</span>
+    <h1 class="slab">About the shop</h1>
+  </header>
+
+  <article class="prose">
+    <p>
+      I'm Aaron. Eclectic Boards &amp; Cards is where I keep the tabletop side of my life:
+      the games I play, the opinions I can't keep to myself, and the games I design.
+    </p>
+    <p>
+      The badge up top is borrowed in spirit from an antique porcelain bottle stopper
+      pressed by the Enterprise Brewing Co. of San Francisco — a small, sturdy thing
+      that outlived the company that made it. That's the standard around here:
+      games, reviews, and writing built to last longer than the hype cycle.
+    </p>
+    <h2>What to expect</h2>
+    <ul>
+      <li><strong>The blog</strong> — dispatches whenever there's something worth saying.</li>
+      <li><strong>Reviews</strong> — coming soon: evergreen, long-haul reviews written after months at the table, not launch-week takes.</li>
+      <li><strong>My games</strong> — coming soon: my own designs, with free print &amp; play files.</li>
+    </ul>
+    <h2>Get in touch</h2>
+    <p>
+      Email me at <a href="mailto:aaronwindeler@gmail.com">aaronwindeler@gmail.com</a> —
+      especially if you've played something I should know about.
+    </p>
+  </article>
+
+  <Newsletter />
+</Base>

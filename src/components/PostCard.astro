@@ -1,0 +1,18 @@
+---
+interface Props {
+  url: string;
+  title: string;
+  description: string;
+  date: Date;
+  category?: string;
+}
+const { url, title, description, date, category = 'blog' } = Astro.props;
+const label = category === 'design-diary' ? 'Design Diary' : 'Blog';
+const fmt = date.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+---
+<article class="card">
+  <span class="kick caps">{label}</span>
+  <h4><a href={url}>{title}</a></h4>
+  <p>{description}</p>
+  <span class="date caps">{fmt}</span>
+</article>

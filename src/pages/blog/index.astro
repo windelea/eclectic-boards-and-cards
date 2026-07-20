@@ -1,0 +1,32 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostCard from '../../components/PostCard.astro';
+import Newsletter from '../../components/Newsletter.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+<Base title="Blog" description="Every dispatch from the shop, newest first." activeNav="blog">
+  <section class="hero" style="padding-bottom: 40px;">
+    <div class="over caps">✦ The archive ✦</div>
+    <h2 class="slab">Every <span class="out">dispatch</span></h2>
+    <p>Newest first. {posts.length} {posts.length === 1 ? 'entry' : 'entries'} and counting.</p>
+  </section>
+
+  <section class="wrap">
+    <div class="posts">
+      {posts.map((post) => (
+        <PostCard
+          url={`/blog/${post.id}`}
+          title={post.data.title}
+          description={post.data.description}
+          date={post.data.date}
+          category={post.data.category}
+        />
+      ))}
+    </div>
+  </section>
+
+  <Newsletter />
+</Base>

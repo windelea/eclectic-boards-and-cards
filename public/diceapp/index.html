@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>EBC Dice</title>
+  <meta name="description" content="A dice table you can actually arrange — pick your dice, color them, lock them, group them.">
+  <meta name="theme-color" content="#46301c">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="EBC Dice">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <header id="topbar">
+    <div class="brand">EBC <em>Dice</em></div>
+    <div id="grandTotal" class="total-chip" title="Total of all dice">0</div>
+    <div class="topbar-btns">
+      <button id="helpBtn" class="icon-btn" aria-label="How to use">?</button>
+      <button id="historyBtn" class="icon-btn" aria-label="Roll history">&#128337;</button>
+      <button id="settingsBtn" class="icon-btn" aria-label="Settings">&#9881;</button>
+    </div>
+  </header>
+
+  <main id="table">
+    <div id="emptyHint">Tap a die below to add it to the table.<br><span>Drag to arrange &middot; tap to reroll &middot; double-tap to lock &middot; hold for options</span></div>
+  </main>
+
+  <footer id="dock">
+    <div id="trayWrap">
+      <div id="tray" aria-label="Add dice"></div>
+    </div>
+    <button id="rollBtn">ROLL</button>
+  </footer>
+
+  <!-- long-press die menu -->
+  <div id="dieMenu" class="popover" hidden>
+    <div class="swatches" id="swatchRow"></div>
+    <div class="menu-actions">
+      <button id="dupBtn">Duplicate</button>
+      <button id="removeBtn" class="danger">Remove</button>
+    </div>
+  </div>
+
+  <!-- custom dN popover -->
+  <div id="dnPopover" class="popover" hidden>
+    <label for="dnInput">Sides</label>
+    <input id="dnInput" type="number" min="2" max="999" value="7" inputmode="numeric">
+    <button id="dnAddBtn">Add</button>
+  </div>
+
+  <div id="backdrop" hidden></div>
+
+  <section id="settingsSheet" class="sheet" hidden>
+    <h2>Settings</h2>
+    <label class="toggle"><input type="checkbox" id="optTotal"> Show grand total</label>
+    <label class="toggle"><input type="checkbox" id="optSubtotals"> Show group subtotals</label>
+    <label class="toggle"><input type="checkbox" id="optHistory"> Show roll history</label>
+    <label class="toggle"><input type="checkbox" id="optTilt"> Dice rest at an angle</label>
+    <h2>Presets</h2>
+    <div class="preset-save">
+      <input id="presetName" type="text" placeholder="Name this setup&hellip;" maxlength="40">
+      <button id="presetSaveBtn">Save</button>
+    </div>
+    <ul id="presetList"></ul>
+    <h2>Table</h2>
+    <button id="clearBtn" class="danger wide">Clear table</button>
+    <button id="closeSettings" class="wide">Close</button>
+  </section>
+
+  <section id="historySheet" class="sheet" hidden>
+    <h2>Roll history</h2>
+    <ul id="historyList"></ul>
+    <button id="closeHistory" class="wide">Close</button>
+  </section>
+
+  <section id="helpSheet" class="sheet" hidden>
+    <h2>How to use</h2>
+    <ul class="howto">
+      <li><b>Add dice</b> &mdash; tap a die in the bottom tray. <b>d?</b> makes a die with any number of sides.</li>
+      <li><b>ROLL</b> &mdash; rolls every unlocked die on the table.</li>
+      <li><b>Tap a die</b> &mdash; rerolls just that one.</li>
+      <li><b>Double-tap a die</b> &mdash; locks it so rolls skip it (padlock badge). Double-tap again to unlock.</li>
+      <li><b>Drag dice</b> &mdash; arrange them however you like. Dice sitting near each other form a group and show their own subtotal.</li>
+      <li><b>Hold a die</b> &mdash; shows what kind it is, plus options: change its color, duplicate it, or remove it.</li>
+      <li><b>Totals</b> &mdash; the grand total lives in the top bar. Turn totals, subtotals, and history on or off in settings (&#9881;).</li>
+      <li><b>History</b> &mdash; the clock button lists your recent rolls. The last three have a <b>Restore</b> button that takes the whole table back to that roll (tap twice to confirm).</li>
+      <li><b>Presets</b> &mdash; in settings, save the current table under a name and reload it any time.</li>
+      <li><b>Install</b> &mdash; add this page to your home screen and it works like an app, even offline:
+        <ul class="howto-sub">
+          <li><b>iPhone / iPad</b> &mdash; open this page in <b>Safari</b>, tap the <b>Share</b> button (the square with an arrow, in the bar at the bottom), scroll down and tap <b>Add to Home Screen</b>, then tap <b>Add</b>. (Other browsers on iPhone can't install apps &mdash; it has to be Safari.)</li>
+          <li><b>Android</b> &mdash; open this page in <b>Chrome</b>, tap the <b>&#8942;</b> menu (top right), then tap <b>Add to Home screen</b> (on some phones it says <b>Install app</b>) and confirm. If Chrome offers an "Install" banner at the bottom of the screen, that works too.</li>
+        </ul>
+      </li>
+    </ul>
+    <button id="closeHelp" class="wide">Close</button>
+  </section>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

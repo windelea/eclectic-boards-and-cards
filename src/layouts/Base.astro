@@ -1,0 +1,78 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  activeNav?: 'home' | 'blog' | 'about';
+}
+
+const {
+  title = 'Eclectic Boards & Cards',
+  description = 'Board & card games — reviews that age well, and designs straight off my workbench.',
+  activeNav = 'home',
+} = Astro.props;
+
+const fullTitle = title === 'Eclectic Boards & Cards' ? title : `${title} · Eclectic Boards & Cards`;
+---
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{fullTitle}</title>
+  <meta name="description" content={description} />
+  <link rel="icon" type="image/webp" href="/logo.webp" />
+  <link rel="alternate" type="application/rss+xml" title="Eclectic Boards & Cards" href="/rss.xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Oswald:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <script is:inline>
+    // Runs before paint to avoid theme flash. Dark is the default.
+    (function () {
+      var t = localStorage.getItem('ebc-theme');
+      if (t === 'light') document.documentElement.dataset.theme = 'light';
+    })();
+  </script>
+</head>
+<body>
+  <div class="topbar caps">
+    <div class="wrap">
+      <span>Tabletop dispatches · printed weekly-ish</span>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark/light mode">☾ / ☀ Mode</button>
+    </div>
+  </div>
+
+  <div class="masthead">
+    <div class="wrap">
+      <img src="/logo.webp" alt="Eclectic Boards & Cards badge" width="120" height="120" />
+      <div>
+        <h1 class="slab"><a href="/">Eclectic Boards <span class="amp">&amp;</span> Cards</a></h1>
+        <p class="sub">Fine games, honest opinions, and cardboard of my own making</p>
+      </div>
+    </div>
+  </div>
+
+  <nav class="mainnav caps">
+    <div class="wrap">
+      <a href="/" aria-current={activeNav === 'home' ? 'page' : undefined}>Home</a>
+      <a href="/blog" aria-current={activeNav === 'blog' ? 'page' : undefined}>Blog</a>
+      <a href="/about" aria-current={activeNav === 'about' ? 'page' : undefined}>About</a>
+    </div>
+  </nav>
+
+  <slot />
+
+  <footer class="site caps">
+    Eclectic Boards &amp; Cards · est. 2026 · <a href="/rss.xml">RSS</a>
+  </footer>
+
+  <script is:inline>
+    document.getElementById('theme-toggle').addEventListener('click', function () {
+      var h = document.documentElement;
+      h.dataset.theme = h.dataset.theme === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('ebc-theme', h.dataset.theme);
+    });
+  </script>
+</body>
+</html>

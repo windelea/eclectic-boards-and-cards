@@ -1,0 +1,36 @@
+---
+import Base from '../../layouts/Base.astro';
+import Newsletter from '../../components/Newsletter.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const label = post.data.category === 'design-diary' ? 'Design Diary' : 'Blog';
+const fmt = post.data.date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+---
+<Base title={post.data.title} description={post.data.description} activeNav="blog">
+  <header class="article-head">
+    <span class="kick caps">✦ {label} ✦</span>
+    <h1 class="slab">{post.data.title}</h1>
+    <p class="date">{fmt}</p>
+  </header>
+
+  <article class="prose">
+    <Content />
+  </article>
+
+  <div class="wrap pagenav caps">
+    <a href="/blog">← All dispatches</a>
+    <a href="/">Home</a>
+  </div>
+
+  <Newsletter />
+</Base>

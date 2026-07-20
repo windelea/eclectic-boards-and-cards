@@ -1,0 +1,16 @@
+{
+  "name": "EBC Dice",
+  "short_name": "Dice",
+  "description": "A dice table you can actually arrange — pick your dice, color them, lock them, group them.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#121010",
+  "theme_color": "#121010",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

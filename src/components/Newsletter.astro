@@ -1,0 +1,44 @@
+---
+// Email capture. Posts to /api/subscribe (Cloudflare Pages Function → KV).
+---
+<section class="news">
+  <h3 class="slab">Join the <span>mailing list</span></h3>
+  <p>New posts &amp; print-and-play drops, straight to your inbox.</p>
+  <form id="subscribe-form">
+    <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+    <input type="email" name="email" required placeholder="your@email.com" aria-label="Email address" />
+    <button type="submit">Sign up</button>
+  </form>
+  <div class="msg" id="subscribe-msg" role="status"></div>
+</section>
+
+<script is:inline>
+  (function () {
+    var form = document.getElementById('subscribe-form');
+    var msg = document.getElementById('subscribe-msg');
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      var email = form.email.value.trim();
+      var hp = form.company.value;
+      msg.className = 'msg';
+      msg.textContent = 'Setting the type…';
+      try {
+        var res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email, company: hp }),
+        });
+        var data = await res.json();
+        if (res.ok && data.ok) {
+          msg.className = 'msg ok';
+          msg.textContent = "You're on the list. Welcome to the shop.";
+          form.reset();
+        } else {
+          msg.textContent = data.error || 'Something jammed the press. Try again?';
+        }
+      } catch (err) {
+        msg.textContent = 'Could not reach the shop — try again in a minute.';
+      }
+    });
+  })();
+</script>
