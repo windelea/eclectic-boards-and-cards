@@ -1,7 +1,9 @@
 // Cache-first service worker: the whole app works offline after first visit.
 // Bump VERSION whenever any shipped file changes.
 
-const VERSION = 'ebc-dice-v12';
+// Keep in sync with BUILD in js/app.js — the app compares them and shows a
+// MISMATCH warning in Settings if a stale asset gets cached.
+const VERSION = 'ebc-dice-v13';
 const ASSETS = [
   './',
   './index.html',
@@ -26,8 +28,13 @@ self.addEventListener('message', (e) => {
 });
 
 self.addEventListener('install', (e) => {
+  // cache: 'reload' bypasses the HTTP cache. Without it addAll can re-cache a
+  // stale app.js from Safari's cache, producing a "new" service worker serving
+  // old code — which is exactly what hid two rounds of fixes on iOS.
   e.waitUntil(
-    caches.open(VERSION).then((c) => c.addAll(ASSETS)).then(() => self.skipWaiting())
+    caches.open(VERSION)
+      .then((c) => c.addAll(ASSETS.map((u) => new Request(u, { cache: 'reload' }))))
+      .then(() => self.skipWaiting())
   );
 });
 

@@ -82,6 +82,7 @@ export function showDieMenu(die, el) {
   menuDie = die;
   el.classList.add('showkind'); // reveal the die's type label while the menu is open
   const pop = $('dieMenu');
+  $('lockBtn').textContent = die.locked ? 'Unlock' : 'Lock';
   pop.hidden = false;
   const r = el.getBoundingClientRect();
   const cx = r.left + r.width / 2;
@@ -95,6 +96,10 @@ export function showDieMenu(die, el) {
 }
 
 function bindPopovers() {
+  $('lockBtn').addEventListener('click', () => {
+    if (menuDie) actions.toggleLock(menuDie);
+    hidePopovers();
+  });
   $('dupBtn').addEventListener('click', () => {
     if (menuDie) actions.duplicate(menuDie);
     hidePopovers();

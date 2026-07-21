@@ -13,55 +13,20 @@ const rollBtn = document.getElementById('rollBtn');
 
 const els = new Map(); // die.id -> element
 
-// iOS Safari ignores user-scalable=no and doesn't reliably honor touch-action
-// for the double-tap-zoom gesture, so double-tapping a die to lock it zooms the
-// page. Swallow the second tap of a rapid pair on both touchstart and touchend
-// (touchend alone wasn't enough), at document level in the capture phase so a
-// tap that lands between elements is still caught. The dock and any open sheet
-// are exempt so ROLL keeps its normal fast repeat taps.
-//
-// dbg counts what actually happened on-device, surfaced in Settings: if seen>0
-// but blocked==0 the timing window is wrong; if blocked>0 and it still zooms,
-// preventDefault isn't stopping WebKit; noncancelable>0 means preventDefault is
-// a silent no-op on this event.
-const dbg = { pd: 0, ts: 0, seen: 0, blocked: 0, noncancelable: 0, lastGap: -1 };
-window.__diceZoomDbg = dbg; // readable from Safari Web Inspector on-device
+// Locking is a long-press menu action rather than a double-tap, so the app no
+// longer asks anyone to perform the gesture that triggers iOS zoom. This guard
+// is just belt-and-braces for habitual double-tappers: swallow the second tap
+// of a rapid pair on the felt. The dock and open sheets are exempt so ROLL
+// keeps its fast repeat taps, and multi-touch is untouched so pinch-zoom works.
 let lastTapAt = 0;
-
-// Count what actually reaches the document so a silent gap is visible rather
-// than inferred: pointerdown vs touchstart vs touchend. pd>0 with ts==0 means
-// something upstream is canceling pointerdown and killing the touch stream.
-document.addEventListener('pointerdown', () => { dbg.pd++; paintDbg(); }, { passive: true, capture: true });
-document.addEventListener('touchstart', () => { dbg.ts++; }, { passive: true, capture: true });
-
-function paintDbg() {
-  const line = document.getElementById('zoomDebug');
-  if (!line) return;
-  const scale = window.visualViewport ? window.visualViewport.scale.toFixed(2) : '?';
-  line.textContent = `pd ${dbg.pd} · ts ${dbg.ts} · te ${dbg.seen} · blk ${dbg.blocked} · nc ${dbg.noncancelable} · zoom ${scale}`;
-}
-window.visualViewport?.addEventListener('resize', paintDbg);
 
 function guardDoubleTapZoom(e) {
   if (e.touches && e.touches.length > 1) return; // leave pinch-zoom alone
   const t = e.target;
   if (t instanceof Element && t.closest('#dock, .sheet, .popover')) return;
-
-  if (e.type === 'touchend') {
-    dbg.seen++;
-    const now = Date.now();
-    dbg.lastGap = now - lastTapAt;
-    if (now - lastTapAt < 350) {
-      if (!e.cancelable) dbg.noncancelable++;
-      else { e.preventDefault(); dbg.blocked++; }
-    }
-    lastTapAt = now;
-  } else if (Date.now() - lastTapAt < 350) {
-    // second tap of a pair: kill the gesture before WebKit recognizes it
-    if (!e.cancelable) dbg.noncancelable++;
-    else { e.preventDefault(); dbg.blocked++; }
-  }
-  paintDbg();
+  const now = Date.now();
+  if (now - lastTapAt < 350 && e.cancelable) e.preventDefault();
+  if (e.type === 'touchend') lastTapAt = now;
 }
 
 document.addEventListener('touchstart', guardDoubleTapZoom, { passive: false, capture: true });
@@ -120,11 +85,6 @@ function renderDie(die) {
 
   makeInteractive(el, die, {
     onTap: (d) => { if (!d.locked) doRoll([d]); },
-    onDoubleTap: (d) => {
-      d.locked = !d.locked;
-      els.get(d.id).classList.toggle('locked', d.locked);
-      save();
-    },
     onLongPress: (d, dieEl) => showDieMenu(d, dieEl),
     onMove: (d, x, y) => {
       const p = clampPos(x, y);
@@ -136,6 +96,12 @@ function renderDie(die) {
     },
     onMoveEnd: () => { save(); refreshTotals(); },
   });
+}
+
+function toggleLock(die) {
+  die.locked = !die.locked;
+  els.get(die.id)?.classList.toggle('locked', die.locked);
+  save();
 }
 
 function removeDieEl(die) {
@@ -283,7 +249,7 @@ function loadPreset(name) {
 
 load();
 initUI({
-  addDie, removeDie, duplicate, recolor, clearTable, loadPreset, restoreSnapshot,
+  addDie, removeDie, duplicate, recolor, clearTable, loadPreset, restoreSnapshot, toggleLock,
   settingsChanged: () => { applyTilts(); refreshTotals(); },
 });
 
@@ -310,12 +276,20 @@ requestAnimationFrame(() => {
   refreshTotals();
 });
 
+// Bump alongside VERSION in sw.js. Reported next to the service worker's own
+// version so the two can be compared: they must match. A mismatch means the
+// service worker cached a stale copy of this file and the UI is lying about
+// which build is running -- which is exactly how an earlier iOS fix looked like
+// it had shipped when it hadn't.
+const BUILD = 'v13';
+
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(() => {});
   navigator.serviceWorker.addEventListener('message', (e) => {
     if (e.data && e.data.type === 'VERSION') {
       const el = document.getElementById('appVersion');
-      if (el) el.textContent = `Version: ${e.data.version}`;
+      const sw = String(e.data.version).replace('ebc-dice-', '');
+      if (el) el.textContent = sw === BUILD ? `Version: ${BUILD}` : `Version: app ${BUILD} / sw ${sw} — MISMATCH`;
     }
   });
   navigator.serviceWorker.ready.then((reg) => {

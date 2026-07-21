@@ -1,14 +1,18 @@
 // Pointer gesture handling for a die element:
-//   drag = move, tap = reroll, double-tap = lock, long-press = menu.
+//   drag = move, tap = reroll, long-press = menu.
+//
+// Locking used to be double-tap, but iOS Safari's double-tap-to-zoom fires on
+// top of it and can't be reliably suppressed, so lock moved to the long-press
+// menu. Dropping the gesture also means a tap no longer has to wait out a
+// double-tap window before rerolling.
 
 const DRAG_PX = 8;
-const DOUBLE_MS = 300;
 const LONGPRESS_MS = 500;
 
 export function makeInteractive(el, die, handlers) {
   let startX = 0, startY = 0, origX = 0, origY = 0;
   let active = false, dragging = false, longPressed = false;
-  let pressTimer = null, tapTimer = null, lastTap = 0;
+  let pressTimer = null;
 
   el.addEventListener('pointerdown', (e) => {
     if (e.pointerType === 'mouse' && e.button !== 0) return;
@@ -47,16 +51,7 @@ export function makeInteractive(el, die, handlers) {
     try { el.releasePointerCapture(e.pointerId); } catch (_) {}
     if (longPressed) return;
     if (dragging) { handlers.onMoveEnd(die); return; }
-    const now = Date.now();
-    if (now - lastTap < DOUBLE_MS) {
-      lastTap = 0;
-      clearTimeout(tapTimer);
-      handlers.onDoubleTap(die);
-    } else {
-      lastTap = now;
-      // wait long enough to know it wasn't a double-tap
-      tapTimer = setTimeout(() => handlers.onTap(die), DOUBLE_MS);
-    }
+    handlers.onTap(die);
   };
 
   el.addEventListener('pointerup', finish);

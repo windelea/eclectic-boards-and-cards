@@ -26,7 +26,7 @@
   </header>
 
   <main id="table">
-    <div id="emptyHint">Tap a die below to add it to the table.<br><span>Drag to arrange &middot; tap to reroll &middot; double-tap to lock &middot; hold for options</span></div>
+    <div id="emptyHint">Tap a die below to add it to the table.<br><span>Drag to arrange &middot; tap to reroll &middot; hold for options</span></div>
   </main>
 
   <footer id="dock">
@@ -40,6 +40,7 @@
   <div id="dieMenu" class="popover" hidden>
     <div class="swatches" id="swatchRow"></div>
     <div class="menu-actions">
+      <button id="lockBtn">Lock</button>
       <button id="dupBtn">Duplicate</button>
       <button id="removeBtn" class="danger">Remove</button>
     </div>
@@ -70,7 +71,6 @@
     <button id="clearBtn" class="danger wide">Clear table</button>
     <button id="closeSettings" class="wide">Close</button>
     <p id="appVersion" class="version-note">Version: &hellip;</p>
-    <p id="zoomDebug" class="version-note">pd 0 &middot; ts 0 &middot; te 0 &middot; blk 0 &middot; nc 0 &middot; zoom 1.00</p>
   </section>
 
   <section id="historySheet" class="sheet" hidden>
@@ -85,9 +85,8 @@
       <li><b>Add dice</b> &mdash; tap a die in the bottom tray. <b>d?</b> makes a die with any number of sides.</li>
       <li><b>ROLL</b> &mdash; rolls every unlocked die on the table.</li>
       <li><b>Tap a die</b> &mdash; rerolls just that one.</li>
-      <li><b>Double-tap a die</b> &mdash; locks it so rolls skip it (padlock badge). Double-tap again to unlock.</li>
       <li><b>Drag dice</b> &mdash; arrange them however you like. Dice sitting near each other form a group and show their own subtotal.</li>
-      <li><b>Hold a die</b> &mdash; shows what kind it is, plus options: change its color, duplicate it, or remove it.</li>
+      <li><b>Hold a die</b> &mdash; shows what kind it is, plus options: <b>Lock</b> it so rolls skip it (padlock badge), change its color, duplicate it, or remove it.</li>
       <li><b>Totals</b> &mdash; the grand total lives in the top bar. Turn totals, subtotals, and history on or off in settings (&#9881;).</li>
       <li><b>History</b> &mdash; the clock button lists your recent rolls. The last three have a <b>Restore</b> button that takes the whole table back to that roll (tap twice to confirm).</li>
       <li><b>Presets</b> &mdash; in settings, save the current table under a name and reload it any time.</li>

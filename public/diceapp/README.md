@@ -24,8 +24,15 @@ Astro copies `public/` verbatim into `dist/`, so the app goes live at
 `eclecticboardsandcards.com/diceapp` whenever the EBC site deploys to Cloudflare Pages
 (see the site's README for the one-time GitHub + Cloudflare setup).
 
-When shipping an update, bump `VERSION` in `sw.js` (e.g. `ebc-dice-v1` → `ebc-dice-v2`)
-so installed PWAs pick up the new files.
+When shipping an update, bump **both** `VERSION` in `sw.js` and `BUILD` in `js/app.js`
+(e.g. `v12` → `v13`) so installed PWAs pick up the new files.
+
+Keep the two in sync. Settings shows the running version, and prints a `MISMATCH`
+warning if they disagree — which means the service worker cached a stale asset and
+the app is not running the code you think it is. The service worker caches with
+`cache: 'reload'` to prevent that, but the warning is there because it already
+happened once: a fresh `sw.js` was serving a stale `app.js`, and two iOS fixes
+looked deployed when they had never actually run.
 
 ## Icons
 
