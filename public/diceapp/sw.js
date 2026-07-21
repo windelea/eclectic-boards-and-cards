@@ -1,7 +1,7 @@
 // Cache-first service worker: the whole app works offline after first visit.
 // Bump VERSION whenever any shipped file changes.
 
-const VERSION = 'ebc-dice-v7';
+const VERSION = 'ebc-dice-v8';
 const ASSETS = [
   './',
   './index.html',
