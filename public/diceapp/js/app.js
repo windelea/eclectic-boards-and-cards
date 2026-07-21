@@ -15,14 +15,44 @@ const els = new Map(); // die.id -> element
 
 // iOS Safari ignores user-scalable=no and doesn't reliably honor touch-action
 // for the double-tap-zoom gesture, so double-tapping a die to lock it zooms the
-// page. Swallow the second touchend of a rapid pair. Scoped to the felt so the
-// dock buttons (ROLL especially) keep their normal fast repeat taps.
-let lastTouchEnd = 0;
-table.addEventListener('touchend', (e) => {
-  const now = Date.now();
-  if (now - lastTouchEnd < 350) e.preventDefault();
-  lastTouchEnd = now;
-}, { passive: false });
+// page. Swallow the second tap of a rapid pair on both touchstart and touchend
+// (touchend alone wasn't enough), at document level in the capture phase so a
+// tap that lands between elements is still caught. The dock and any open sheet
+// are exempt so ROLL keeps its normal fast repeat taps.
+//
+// dbg counts what actually happened on-device, surfaced in Settings: if seen>0
+// but blocked==0 the timing window is wrong; if blocked>0 and it still zooms,
+// preventDefault isn't stopping WebKit; noncancelable>0 means preventDefault is
+// a silent no-op on this event.
+const dbg = { seen: 0, blocked: 0, noncancelable: 0, lastGap: -1 };
+window.__diceZoomDbg = dbg; // readable from Safari Web Inspector on-device
+let lastTapAt = 0;
+
+function guardDoubleTapZoom(e) {
+  if (e.touches && e.touches.length > 1) return; // leave pinch-zoom alone
+  const t = e.target;
+  if (t instanceof Element && t.closest('#dock, .sheet, .popover')) return;
+
+  if (e.type === 'touchend') {
+    dbg.seen++;
+    const now = Date.now();
+    dbg.lastGap = now - lastTapAt;
+    if (now - lastTapAt < 350) {
+      if (!e.cancelable) dbg.noncancelable++;
+      else { e.preventDefault(); dbg.blocked++; }
+    }
+    lastTapAt = now;
+  } else if (Date.now() - lastTapAt < 350) {
+    // second tap of a pair: kill the gesture before WebKit recognizes it
+    if (!e.cancelable) dbg.noncancelable++;
+    else { e.preventDefault(); dbg.blocked++; }
+  }
+  const line = document.getElementById('zoomDebug');
+  if (line) line.textContent = `taps ${dbg.seen} · blocked ${dbg.blocked} · uncancelable ${dbg.noncancelable}`;
+}
+
+document.addEventListener('touchstart', guardDoubleTapZoom, { passive: false, capture: true });
+document.addEventListener('touchend', guardDoubleTapZoom, { passive: false, capture: true });
 
 /* ---------- geometry ---------- */
 
