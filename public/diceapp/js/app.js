@@ -24,9 +24,23 @@ const els = new Map(); // die.id -> element
 // but blocked==0 the timing window is wrong; if blocked>0 and it still zooms,
 // preventDefault isn't stopping WebKit; noncancelable>0 means preventDefault is
 // a silent no-op on this event.
-const dbg = { seen: 0, blocked: 0, noncancelable: 0, lastGap: -1 };
+const dbg = { pd: 0, ts: 0, seen: 0, blocked: 0, noncancelable: 0, lastGap: -1 };
 window.__diceZoomDbg = dbg; // readable from Safari Web Inspector on-device
 let lastTapAt = 0;
+
+// Count what actually reaches the document so a silent gap is visible rather
+// than inferred: pointerdown vs touchstart vs touchend. pd>0 with ts==0 means
+// something upstream is canceling pointerdown and killing the touch stream.
+document.addEventListener('pointerdown', () => { dbg.pd++; paintDbg(); }, { passive: true, capture: true });
+document.addEventListener('touchstart', () => { dbg.ts++; }, { passive: true, capture: true });
+
+function paintDbg() {
+  const line = document.getElementById('zoomDebug');
+  if (!line) return;
+  const scale = window.visualViewport ? window.visualViewport.scale.toFixed(2) : '?';
+  line.textContent = `pd ${dbg.pd} · ts ${dbg.ts} · te ${dbg.seen} · blk ${dbg.blocked} · nc ${dbg.noncancelable} · zoom ${scale}`;
+}
+window.visualViewport?.addEventListener('resize', paintDbg);
 
 function guardDoubleTapZoom(e) {
   if (e.touches && e.touches.length > 1) return; // leave pinch-zoom alone
@@ -47,8 +61,7 @@ function guardDoubleTapZoom(e) {
     if (!e.cancelable) dbg.noncancelable++;
     else { e.preventDefault(); dbg.blocked++; }
   }
-  const line = document.getElementById('zoomDebug');
-  if (line) line.textContent = `taps ${dbg.seen} · blocked ${dbg.blocked} · uncancelable ${dbg.noncancelable}`;
+  paintDbg();
 }
 
 document.addEventListener('touchstart', guardDoubleTapZoom, { passive: false, capture: true });

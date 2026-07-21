@@ -177,6 +177,7 @@ body {
   width: var(--die-size);
   height: var(--die-size);
   touch-action: none;
+  -webkit-touch-callout: none;
   cursor: grab;
   z-index: 2;
   --rot: 0deg;

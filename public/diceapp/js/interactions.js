@@ -12,7 +12,12 @@ export function makeInteractive(el, die, handlers) {
 
   el.addEventListener('pointerdown', (e) => {
     if (e.pointerType === 'mouse' && e.button !== 0) return;
-    e.preventDefault();
+    // NB: no preventDefault here. WebKit synthesizes pointer events from the
+    // touch stream, so canceling pointerdown suppresses touchstart/touchend for
+    // the whole sequence — which silently disabled the double-tap-zoom guard in
+    // app.js. Scrolling and selection are already handled by touch-action: none
+    // and -webkit-user-select: none on .die.
+    if (e.pointerType === 'mouse') e.preventDefault();
     try { el.setPointerCapture(e.pointerId); } catch (_) {}
     active = true; dragging = false; longPressed = false;
     startX = e.clientX; startY = e.clientY;
