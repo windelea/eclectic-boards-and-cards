@@ -258,4 +258,13 @@ requestAnimationFrame(() => {
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(() => {});
+  navigator.serviceWorker.addEventListener('message', (e) => {
+    if (e.data && e.data.type === 'VERSION') {
+      const el = document.getElementById('appVersion');
+      if (el) el.textContent = `Version: ${e.data.version}`;
+    }
+  });
+  navigator.serviceWorker.ready.then((reg) => {
+    reg.active?.postMessage('GET_VERSION');
+  });
 }

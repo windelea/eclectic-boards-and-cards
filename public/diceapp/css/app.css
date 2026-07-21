@@ -503,6 +503,13 @@ button.wide { width: 100%; margin-top: .5rem; }
 }
 .sheet h2:first-child { margin-top: 0; }
 
+.version-note {
+  margin-top: .7rem;
+  text-align: center;
+  font-size: .75rem;
+  opacity: .55;
+}
+
 .toggle {
   display: flex;
   align-items: center;

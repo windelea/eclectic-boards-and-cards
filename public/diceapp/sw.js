@@ -1,7 +1,7 @@
 // Cache-first service worker: the whole app works offline after first visit.
 // Bump VERSION whenever any shipped file changes.
 
-const VERSION = 'ebc-dice-v8';
+const VERSION = 'ebc-dice-v9';
 const ASSETS = [
   './',
   './index.html',
@@ -18,6 +18,12 @@ const ASSETS = [
   './icons/maskable-512.png',
   './icons/apple-touch-icon.png',
 ];
+
+self.addEventListener('message', (e) => {
+  if (e.data === 'GET_VERSION') {
+    e.source.postMessage({ type: 'VERSION', version: VERSION });
+  }
+});
 
 self.addEventListener('install', (e) => {
   e.waitUntil(
