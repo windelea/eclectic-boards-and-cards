@@ -13,6 +13,17 @@ const rollBtn = document.getElementById('rollBtn');
 
 const els = new Map(); // die.id -> element
 
+// iOS Safari ignores user-scalable=no and doesn't reliably honor touch-action
+// for the double-tap-zoom gesture, so double-tapping a die to lock it zooms the
+// page. Swallow the second touchend of a rapid pair. Scoped to the felt so the
+// dock buttons (ROLL especially) keep their normal fast repeat taps.
+let lastTouchEnd = 0;
+table.addEventListener('touchend', (e) => {
+  const now = Date.now();
+  if (now - lastTouchEnd < 350) e.preventDefault();
+  lastTouchEnd = now;
+}, { passive: false });
+
 /* ---------- geometry ---------- */
 
 function clampPos(x, y) {

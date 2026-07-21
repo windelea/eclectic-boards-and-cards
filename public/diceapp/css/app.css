@@ -135,6 +135,7 @@ body {
   position: relative;
   flex: 1;
   overflow: hidden;
+  touch-action: manipulation;
   background:
     radial-gradient(ellipse at 50% 30%, rgba(255, 235, 200, .05), transparent 55%),
     radial-gradient(ellipse at center, var(--felt) 0%, #5e1c0f 65%, #521609 100%);

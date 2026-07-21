@@ -36,7 +36,6 @@ export function makeInteractive(el, die, handlers) {
 
   const finish = (e) => {
     if (!active) return;
-    e.preventDefault();
     active = false;
     clearTimeout(pressTimer);
     el.classList.remove('dragging');
