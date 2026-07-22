@@ -13,25 +13,6 @@ const rollBtn = document.getElementById('rollBtn');
 
 const els = new Map(); // die.id -> element
 
-// Locking is a long-press menu action rather than a double-tap, so the app no
-// longer asks anyone to perform the gesture that triggers iOS zoom. This guard
-// is just belt-and-braces for habitual double-tappers: swallow the second tap
-// of a rapid pair on the felt. The dock and open sheets are exempt so ROLL
-// keeps its fast repeat taps, and multi-touch is untouched so pinch-zoom works.
-let lastTapAt = 0;
-
-function guardDoubleTapZoom(e) {
-  if (e.touches && e.touches.length > 1) return; // leave pinch-zoom alone
-  const t = e.target;
-  if (t instanceof Element && t.closest('#dock, .sheet, .popover')) return;
-  const now = Date.now();
-  if (now - lastTapAt < 350 && e.cancelable) e.preventDefault();
-  if (e.type === 'touchend') lastTapAt = now;
-}
-
-document.addEventListener('touchstart', guardDoubleTapZoom, { passive: false, capture: true });
-document.addEventListener('touchend', guardDoubleTapZoom, { passive: false, capture: true });
-
 /* ---------- geometry ---------- */
 
 function clampPos(x, y) {
@@ -85,6 +66,7 @@ function renderDie(die) {
 
   makeInteractive(el, die, {
     onTap: (d) => { if (!d.locked) doRoll([d]); },
+    onDoubleTap: (d) => toggleLock(d),
     onLongPress: (d, dieEl) => showDieMenu(d, dieEl),
     onMove: (d, x, y) => {
       const p = clampPos(x, y);
@@ -281,7 +263,7 @@ requestAnimationFrame(() => {
 // service worker cached a stale copy of this file and the UI is lying about
 // which build is running -- which is exactly how an earlier iOS fix looked like
 // it had shipped when it hadn't.
-const BUILD = 'v13';
+const BUILD = 'v14';
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(() => {});

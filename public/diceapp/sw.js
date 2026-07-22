@@ -3,7 +3,7 @@
 
 // Keep in sync with BUILD in js/app.js — the app compares them and shows a
 // MISMATCH warning in Settings if a stale asset gets cached.
-const VERSION = 'ebc-dice-v13';
+const VERSION = 'ebc-dice-v14';
 const ASSETS = [
   './',
   './index.html',
